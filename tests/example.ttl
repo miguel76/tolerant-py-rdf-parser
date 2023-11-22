@@ -1,0 +1,99 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix : <http://example.com/ontology#>.
+
+# Classes
+:Animal a owl:Class ;
+    rdfs:label "Animal" ;
+    rdfs:comment "Represents an animal in the ecosystem".
+
+:Plant a owl:Class ;
+    rdfs:label "Plant" ;
+    rdfs:comment "Represents a plant in the ecosystem".
+
+:Herbivore a owl:Class ;
+    rdfs:label "Herbivore" ;
+    rdfs:comment "Represents an animal that primarily eats plants";
+    rdfs:subClassOf :Animal ;
+    owl:equivalentClass [
+        a owl:Restriction ;
+        owl:onProperty :eats ;
+        owl:allValuesFrom :Plant
+    ].
+
+:Carnivore a owl:Class ;
+    rdfs:label "Carnivore" ;
+    rdfs:comment "Represents an animal that primarily eats other animals";
+    rdfs:subClassOf :Animal ;
+    owl:equivalentClass [
+        a owl:Restriction ;
+        owl:onProperty :eats ;
+        owl:allValuesFrom :Animal
+    ].
+
+:Omnivore a owl:Class ;
+    rdfs:label "Omnivore" ;
+    rdfs:comment "Represents an animal that eats both plants and animals";
+    rdfs:subClassOf :Animal ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (:Carnivore :Herbivore)
+    ].
+
+:Habitat a owl:Class ;
+    rdfs:label "Habitat" ;
+    rdfs:comment "Represents the habitat where animals live".
+
+# Object Properties
+:eats a owl:ObjectProperty ;
+    rdfs:label "eats" ;
+    rdfs:comment "Specifies the relationship between animals where one animal eats another" ;
+    rdfs:domain :Animal ;
+    rdfs:range :Animal.
+
+:habitatOf a owl:ObjectProperty ;
+    rdfs:label "habitatOf" ;
+    rdfs:comment "Specifies the relationship between an animal and its habitat" ;
+    rdfs:domain :Animal ;
+    rdfs:range :Habitat.
+
+# Data Properties
+:isHerbivore a owl:DatatypeProperty ;
+    rdfs:label "isHerbivore" ;
+    rdfs:comment "Specifies if an animal is a herbivore" ;
+    rdfs:domain :Animal ;
+    rdfs:range xsd:boolean.
+
+:isCarnivore a owl:DatatypeProperty ;
+    rdfs:label "isCarnivore" ;
+    rdfs:comment "Specifies if an animal is a carnivore" ;
+    rdfs:domain :Animal ;
+    rdfs:range xsd:boolean.
+
+:country a owl:DatatypeProperty ;
+    rdfs:label "country" ;
+    rdfs:comment "Specifies the country where an animal is found" ;
+    rdfs:domain :Animal ;
+    rdfs:range rdfs:Literal.
+
+# Individuals
+:Lion a :Carnivore ;
+    rdfs:label "Lion" ;
+    rdfs:comment "A carnivorous animal known for hunting other animals".
+
+:Elephant a :Herbivore ;
+    rdfs:label "Elephant" ;
+    rdfs:comment "A herbivorous animal known for eating plants".
+
+:Zebra a :Herbivore ;
+    rdfs:label "Zebra" ;
+    rdfs:comment "A herbivorous animal found in African savannas".
+
+# Define relationships between individuals
+:Lion :eats :Zebra ;
+    rdfs:comment "Lions prey on zebras".
+
+:Zebra :habitatOf :Savanna ;
+    rdfs:comment "Zebras live in the savanna habitat".
